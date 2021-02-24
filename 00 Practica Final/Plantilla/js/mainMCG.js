@@ -51,7 +51,7 @@ require(["esri/map",
 
         // Step: Wire the draw tool initialization function
 
-        mapMain.on("load", fPintaYQuery);
+        // mapMain.on("load", fPintaYQuery);
 
 
         // Implement the Draw toolbar
