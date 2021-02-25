@@ -75,11 +75,20 @@ require(["esri/map",
 
             mapMain.graphics.clear();
 
+            /*
+             * Step: Construct and add the polygon graphic
+             */
+
             var graphicPolygon = new Graphic(geometryInput, tbDrawSymbol);
 
             mapMain.graphics.add(graphicPolygon);
 
+            // Call the next function
+            selectCities(geometryInput);
+
         }
+
+
 
         function fQueryEstados() {
             alert("Evento del botón Ir a estado");
