@@ -9,6 +9,12 @@ require(["esri/map",
         "esri/dijit/OverviewMap",
         "esri/layers/ArcGISDynamicMapServiceLayer",
         "esri/layers/FeatureLayer",
+
+        "esri/symbols/SimpleFillSymbol",
+        "esri/symbols/SimpleLineSymbol",
+        "esri/symbols/SimpleMarkerSymbol",
+
+
         "esri/toolbars/draw",
         "esri/graphic",
         "esri/tasks/query",
@@ -30,6 +36,10 @@ require(["esri/map",
         BasemapToggle,
         OverviewMap,
         ArcGISDynamicMapServiceLayer,
+        SimpleFillSymbol,
+        SimpleLineSymbol,
+        SimpleMarkerSymbol,
+
         FeatureLayer,
         Draw,
         Graphic,
@@ -97,29 +107,32 @@ require(["esri/map",
         // URL variables
 
         var sUrlUSAService = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer";
-        var sUrlStateLayer = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2";
+        var sUrlCities = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/0";
+        var sUrlState = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer/2";
 
         // add USA map service to the map
-        var lyrUSA = new ArcGISDynamicMapServiceLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/USA/MapServer", {
-            opacity: 0.5
+        var lyrUSA = new ArcGISDynamicMapServiceLayer(sUrlUSAService, {
+            opacity: 0.25
         });
+        lyrUSA.setVisibleLayers([0, 1, 2, 3]);
 
         // Create the map
         mapMain = new Map("map", {
             basemap: "satellite",
-            center: [-122.40, 37.75], // long, lat
-            zoom: 13,
+            center: [-122.30, 37.75], // long, lat
+            zoom: 10,
             sliderStyle: "small"
         });
 
+
         mapMain.addLayer(lyrUSA);
 
-        mapMain.on("load", function(evt) {
+        /*mapMain.on("load", function(evt) {
             mapMain.resize();
             mapMain.reposition();
 
         });
-
+*/
         // Step: Add ad search widget
         var dijitSearch = new Search({
             map: mapMain,
@@ -144,7 +157,7 @@ require(["esri/map",
         var dijitScale = new Scalebar({
             map: mapMain,
             scalebarUnit: "metric",
-            attachTo: "bottom-left"
+            attachTo: "bottom-center"
         });
 
         /* Step: Add the BaseMapToggle widget to the map
@@ -161,7 +174,8 @@ require(["esri/map",
         var overviewMap = new OverviewMap({
             map: mapMain,
             visible: true,
-            attachTo: "bottom-right"
+            width: 150,
+            attachTo: "bottom-left"
         }, );
         overviewMap.startup();
 
