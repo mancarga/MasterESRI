@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9" />
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+    <title>Sample</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/3.18/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/3.18/esri/css/esri.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        #map {
+            padding: 0;
+        }
+    </style>
+    <script src="https://js.arcgis.com/3.35/"></script>
+    <script>
+        require(["esri/map",
+            "esri/layers/ArcGISDynamicMapServiceLayer",
+            "esri/tasks/FindTask",
+            "esri/tasks/FindParameters",
+            "esri/symbols/SimpleFillSymbol",
+            "esri/symbols/SimpleLineSymbol",
+            "esri/graphicsUtils",
+            "dojo/_base/array",
+            "dojo/_base/Color",
+            "dojo/dom",
+            "dojo/on",
+            "dojo/domReady!"
+        ], function(Map, ArcGISDynamicMapServiceLayer, FindTask, FindParameters, SimpleFillSymbol, SimpleLineSymbol, graphicsUtils, arrayUtils, Color, dom, on) {
+
+            var map = new Map("map", {
+                basemap: "streets",
+                center: [-100.275, 42.573],
+                zoom: 5
+            });
+
+            var layer = new ArcGISDynamicMapServiceLayer("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
+            map.addLayer(layer);
+
+            var findTask = new FindTask("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer");
+
+            //initialize query
+            var findParams = new FindParameters();
+            findParams.layerIds = [3];
+            findParams.returnGeometry = true;
+            findParams.searchFields = ["NAME", "STATE_NAME", "POP2000", "POP2007"];
+
+
+            //initialize InfoTemplate
+            //infoTemplate = new InfoTemplate("${NAME}", "County Name : ${NAME}<br/> State : ${STATE_NAME}<br/>Population In 2000 : ${POP2000}<br/>Population In 2007 : POP2007");
+
+            on(dom.byId("search"), "click", getCountyDetails);
+
+            function getCountyDetails() {
+                findParams.outSpatialReference = map.spatialReference;
+                findParams.searchText = dom.byId("county").value;
+                findTask.execute(findParams, showResults);
+            }
+
+            function showResults(results) {
+                var polygonSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+                    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 0]), 2), new Color([255, 0, 0, 0.5]));
+
+                var items = arrayUtils.map(results, function(result) {
+                    var graphic = result.feature;
+                    graphic.setSymbol(polygonSymbol);
+                    map.graphics.add(graphic);
+
+                    return result.feature;
+                });
+                var myFeatureExtent = graphicsUtils.graphicsExtent(items);
+                map.setExtent(myFeatureExtent, true);
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <input type="text" id="county" />
+    <input type="button" id="search" value="Get Details" />
+    <div id="map">
+</body>
+
+</html>

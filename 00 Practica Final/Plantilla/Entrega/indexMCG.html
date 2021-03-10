@@ -19,7 +19,7 @@
         };
     </script>
     <script src="https://js.arcgis.com/3.35/"></script>
-    <script src="js/mainMCG.js"></script>
+    <script src="mainMCG.js"></script>
 
     <style>
         #search {
@@ -52,21 +52,23 @@
 
                 <div data-dojo-type="dijit.layout.ContentPane" data-dojo-props="title:'Tareas'">
                     Operaciones
-                    <button id="pintaYQuery" type="button">Seleccionar ciudades</button>
+                    <button id="pintaYQuery" type="button">Select Cities</button>
+                    <button id="clearCities" type="button">Clean Selection</button>
+                    <div id="queryCities"></div>
                 </div>
 
             </div>
         </div>
 
         <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-
+            <div id="HomeButton"></div>
             <div id="BasemapToggle"></div>
 
         </div>
 
         <div id="footer" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'bottom'">
 
-            <label for="dtb">Introduzca el nombre de un estado:</label> <input id="dtb" data-dojo-type="dijit/form/TextBox" value="Washington" />
+            <label for="dtb">Introduzca el nombre de un estado:</label> <input id="dtb" data-dojo-type="dijit/form/ComboBox" />
             <button id="progButtonNode" type="button">Ir al estado</button>
         </div>
 
